@@ -1,1 +1,354 @@
-<!-- See full file in repo -->
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatAcad · Generador de Prompts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root,[data-theme="light"]{
+  --color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;
+  --color-surface-offset:#f3f0ec;--color-divider:#dcd9d5;--color-border:#d4d1ca;
+  --color-text:#28251d;--color-text-muted:#7a7974;--color-text-faint:#bab9b4;
+  --color-primary:#01696f;--color-primary-hover:#0c4e54;--color-primary-active:#0f3638;
+  --color-primary-highlight:#cedcd8;
+  --shadow-sm:0 1px 2px oklch(0.2 0.01 80/.06);
+  --shadow-md:0 4px 12px oklch(0.2 0.01 80/.08);
+  --radius-sm:.375rem;--radius-md:.5rem;--radius-lg:.75rem;--radius-xl:1rem;--radius-full:9999px;
+  --sp1:.25rem;--sp2:.5rem;--sp3:.75rem;--sp4:1rem;--sp5:1.25rem;--sp6:1.5rem;--sp8:2rem;
+  --tx-xs:clamp(.75rem,.7rem + .25vw,.875rem);--tx-sm:clamp(.875rem,.8rem + .35vw,1rem);
+  --tx-base:clamp(1rem,.95rem + .25vw,1.125rem);--tx-lg:clamp(1.125rem,1rem + .75vw,1.5rem);
+  --font-d:'Instrument Serif',Georgia,serif;--font-b:'Inter','Helvetica Neue',sans-serif;
+  --tr:180ms cubic-bezier(.16,1,.3,1);
+}
+[data-theme="dark"]{
+  --color-bg:#171614;--color-surface:#1c1b19;--color-surface-2:#201f1d;
+  --color-surface-offset:#1d1c1a;--color-divider:#262523;--color-border:#393836;
+  --color-text:#cdccca;--color-text-muted:#797876;--color-text-faint:#5a5957;
+  --color-primary:#4f98a3;--color-primary-hover:#227f8b;--color-primary-active:#1a626b;
+  --color-primary-highlight:#313b3b;
+  --shadow-sm:0 1px 2px oklch(0 0 0/.2);--shadow-md:0 4px 12px oklch(0 0 0/.3);
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme]){
+  --color-bg:#171614;--color-surface:#1c1b19;--color-surface-2:#201f1d;
+  --color-surface-offset:#1d1c1a;--color-divider:#262523;--color-border:#393836;
+  --color-text:#cdccca;--color-text-muted:#797876;--color-text-faint:#5a5957;
+  --color-primary:#4f98a3;--color-primary-hover:#227f8b;--color-primary-highlight:#313b3b;
+}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{font-family:var(--font-b);font-size:var(--tx-base);color:var(--color-text);background:var(--color-bg);min-height:100dvh;padding:var(--sp4)}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
+input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm)}
+.app{max-width:660px;margin:0 auto;display:flex;flex-direction:column;gap:var(--sp5)}
+.header{display:flex;align-items:center;justify-content:space-between;padding-bottom:var(--sp4);border-bottom:1px solid var(--color-divider)}
+.logo{display:flex;align-items:center;gap:var(--sp3)}
+.logo-icon{width:34px;height:34px;border-radius:var(--radius-md);background:var(--color-primary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-text{font-family:var(--font-d);font-size:var(--tx-lg);font-style:italic;line-height:1.1}
+.logo-sub{font-size:var(--tx-xs);color:var(--color-text-muted);letter-spacing:.04em;text-transform:uppercase;margin-top:2px}
+.theme-btn{width:34px;height:34px;border-radius:var(--radius-md);background:var(--color-surface-offset);border:1px solid var(--color-border);display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);transition:background var(--tr),color var(--tr)}
+.theme-btn:hover{background:var(--color-divider);color:var(--color-text)}
+.card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--sp5) var(--sp6);box-shadow:var(--shadow-sm)}
+.card-head{display:flex;align-items:center;gap:var(--sp2);margin-bottom:var(--sp4)}
+.step-no{width:20px;height:20px;border-radius:var(--radius-full);background:var(--color-primary);color:#fff;font-size:.65rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.card-title{font-size:var(--tx-sm);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.06em}
+.card-desc{font-size:var(--tx-xs);color:var(--color-text-faint);margin-left:auto}
+.verb-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp2)}
+@media(min-width:480px){.verb-grid{grid-template-columns:repeat(4,1fr)}}
+.verb-btn{display:flex;flex-direction:column;align-items:center;gap:var(--sp2);padding:var(--sp4) var(--sp3);border-radius:var(--radius-lg);border:1.5px solid var(--color-border);background:var(--color-surface-2);transition:border-color var(--tr),background var(--tr),box-shadow var(--tr);text-align:center;cursor:pointer}
+.verb-btn:hover{border-color:var(--color-primary);background:color-mix(in oklch,var(--color-primary) 5%,var(--color-surface-2))}
+.verb-btn.sel{border-color:var(--color-primary);background:var(--color-primary-highlight);box-shadow:0 0 0 3px color-mix(in oklch,var(--color-primary) 18%,transparent)}
+.v-icon{font-size:1.35rem;line-height:1}.v-label{font-size:var(--tx-sm);font-weight:600;line-height:1.2}
+.v-desc{font-size:var(--tx-xs);color:var(--color-text-muted);line-height:1.3}
+.seg-tabs{display:flex;gap:var(--sp2);margin-bottom:var(--sp4)}
+.seg-tab{padding:var(--sp2) var(--sp4);border-radius:var(--radius-full);border:1.5px solid var(--color-border);background:var(--color-surface-2);font-size:var(--tx-sm);font-weight:500;cursor:pointer;transition:all var(--tr)}
+.seg-tab:hover{border-color:var(--color-primary)}
+.seg-tab.sel{border-color:var(--color-primary);background:var(--color-primary-highlight);color:var(--color-primary-active);font-weight:600}
+.unidad-grid{display:none;grid-template-columns:repeat(2,1fr);gap:var(--sp2)}
+.unidad-grid.visible{display:grid}
+@media(min-width:440px){.unidad-grid{grid-template-columns:repeat(3,1fr)}}
+.unidad-btn{display:flex;flex-direction:column;padding:var(--sp3) var(--sp4);border-radius:var(--radius-md);border:1.5px solid var(--color-border);background:var(--color-surface-2);cursor:pointer;transition:all var(--tr);gap:2px}
+.unidad-btn:hover{border-color:var(--color-primary)}
+.unidad-btn.sel{border-color:var(--color-primary);background:var(--color-primary-highlight)}
+.u-num{font-size:var(--tx-xs);font-weight:700;color:var(--color-primary);text-transform:uppercase;letter-spacing:.04em}
+.u-name{font-size:var(--tx-sm);font-weight:500;color:var(--color-text);line-height:1.3}
+.transversal-wrap{display:none}
+.transversal-wrap.visible{display:block}
+.enfoque-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp2)}
+@media(min-width:440px){.enfoque-grid{grid-template-columns:repeat(4,1fr)}}
+.enf-btn{display:flex;flex-direction:column;align-items:center;gap:var(--sp2);padding:var(--sp3) var(--sp2);border-radius:var(--radius-lg);border:1.5px solid var(--color-border);background:var(--color-surface-2);cursor:pointer;transition:all var(--tr);text-align:center}
+.enf-btn:hover{border-color:var(--color-primary);background:color-mix(in oklch,var(--color-primary) 4%,var(--color-surface-2))}
+.enf-btn.sel{border-color:var(--color-primary);background:var(--color-primary-highlight);box-shadow:0 0 0 3px color-mix(in oklch,var(--color-primary) 18%,transparent)}
+.e-icon{font-size:1.2rem}.e-label{font-size:var(--tx-xs);font-weight:600;line-height:1.2;color:var(--color-text)}
+.e-desc{font-size:var(--tx-xs);color:var(--color-text-muted);line-height:1.2}
+.free-input{width:100%;padding:var(--sp3) var(--sp4);border-radius:var(--radius-lg);border:1.5px solid var(--color-border);background:var(--color-surface-2);font-size:var(--tx-base);line-height:1.5;resize:none;transition:border-color var(--tr)}
+.free-input::placeholder{color:var(--color-text-faint)}
+.free-input:focus{border-color:var(--color-primary);outline:none}
+.free-hint{font-size:var(--tx-xs);color:var(--color-text-muted);margin-top:var(--sp2);display:flex;align-items:flex-start;gap:var(--sp2)}
+.hint-dot{width:6px;height:6px;border-radius:var(--radius-full);background:var(--color-text-faint);margin-top:5px;flex-shrink:0}
+.btn-gen{width:100%;padding:var(--sp4) var(--sp6);border-radius:var(--radius-lg);background:var(--color-primary);color:#fff;font-size:var(--tx-base);font-weight:600;letter-spacing:.01em;border:none;cursor:pointer;transition:background var(--tr),transform var(--tr),box-shadow var(--tr);display:flex;align-items:center;justify-content:center;gap:var(--sp3);box-shadow:var(--shadow-sm)}
+.btn-gen:hover{background:var(--color-primary-hover);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.btn-gen:active{transform:translateY(0)}
+.btn-gen:disabled{opacity:.42;cursor:not-allowed;transform:none;box-shadow:none}
+.result{background:var(--color-surface);border:1.5px solid var(--color-primary);border-radius:var(--radius-xl);padding:var(--sp6);box-shadow:var(--shadow-md);display:none;animation:fup .35s cubic-bezier(.16,1,.3,1) forwards}
+.result.vis{display:block}
+@keyframes fup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.res-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp4)}
+.res-label{font-size:var(--tx-xs);font-weight:600;color:var(--color-primary);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:var(--sp2)}
+.res-actions{display:flex;gap:var(--sp2)}
+.btn-copy,.btn-reset{padding:var(--sp2) var(--sp3);border-radius:var(--radius-md);font-size:var(--tx-xs);font-weight:600;border:1px solid var(--color-border);background:var(--color-surface-offset);cursor:pointer;transition:all var(--tr);display:flex;align-items:center;gap:var(--sp1)}
+.btn-copy:hover,.btn-reset:hover{border-color:var(--color-primary);background:var(--color-primary-highlight)}
+.res-text{font-size:var(--tx-base);line-height:1.75;color:var(--color-text);white-space:pre-wrap;word-break:break-word}
+.res-tags{display:flex;flex-wrap:wrap;gap:var(--sp2);margin-top:var(--sp4);padding-top:var(--sp4);border-top:1px solid var(--color-divider)}
+.tag{padding:var(--sp1) var(--sp3);border-radius:var(--radius-full);background:var(--color-surface-offset);font-size:var(--tx-xs);color:var(--color-text-muted);font-weight:500}
+.tag.hi{background:var(--color-primary-highlight);color:var(--color-primary-active)}
+.toast{position:fixed;bottom:var(--sp6);left:50%;transform:translateX(-50%) translateY(16px);background:var(--color-text);color:var(--color-bg);padding:var(--sp3) var(--sp5);border-radius:var(--radius-full);font-size:var(--tx-sm);font-weight:500;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:99}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">ChatAcad</div>
+        <div class="logo-sub">Generador de prompts</div>
+      </div>
+    </div>
+    <button class="theme-btn" data-theme-toggle aria-label="Cambiar tema">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </header>
+
+  <!-- PASO 1 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="step-no">1</span>
+      <span class="card-title">¿Qué quieres hacer?</span>
+    </div>
+    <div class="verb-grid" role="group" aria-label="Selecciona una acción">
+      <button class="verb-btn" data-verb="Explícame" onclick="pick('verb',this)">
+        <span class="v-icon">🔍</span><span class="v-label">Explicar</span><span class="v-desc">Entender a fondo</span>
+      </button>
+      <button class="verb-btn" data-verb="Resume" onclick="pick('verb',this)">
+        <span class="v-icon">📝</span><span class="v-label">Resumir</span><span class="v-desc">Sintetizar ideas</span>
+      </button>
+      <button class="verb-btn" data-verb="Dame un ejemplo práctico de" onclick="pick('verb',this)">
+        <span class="v-icon">⚗️</span><span class="v-label">Ejemplificar</span><span class="v-desc">Ver en acción</span>
+      </button>
+      <button class="verb-btn" data-verb="Analiza y compara" onclick="pick('verb',this)">
+        <span class="v-icon">⚖️</span><span class="v-label">Analizar</span><span class="v-desc">Evaluar y comparar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- PASO 2 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="step-no">2</span>
+      <span class="card-title">Segmento de la materia</span>
+      <span class="card-desc">Unidad o tema transversal</span>
+    </div>
+    <div class="seg-tabs" role="tablist">
+      <button class="seg-tab sel" role="tab" aria-selected="true" onclick="switchSeg('unidad',this)" id="tab-unidad">📖 Por unidad / capítulo</button>
+      <button class="seg-tab" role="tab" aria-selected="false" onclick="switchSeg('transversal',this)" id="tab-trans">🔗 Tema transversal</button>
+    </div>
+    <div class="unidad-grid visible" id="unidad-panel" role="tabpanel">
+      <button class="unidad-btn" data-seg="la Unidad 1" onclick="pick('seg',this)">
+        <span class="u-num">Unidad 1</span><span class="u-name">Introducción / Fundamentos</span>
+      </button>
+      <button class="unidad-btn" data-seg="la Unidad 2" onclick="pick('seg',this)">
+        <span class="u-num">Unidad 2</span><span class="u-name">Desarrollo conceptual</span>
+      </button>
+      <button class="unidad-btn" data-seg="la Unidad 3" onclick="pick('seg',this)">
+        <span class="u-num">Unidad 3</span><span class="u-name">Aplicación práctica</span>
+      </button>
+      <button class="unidad-btn" data-seg="la Unidad 4" onclick="pick('seg',this)">
+        <span class="u-num">Unidad 4</span><span class="u-name">Análisis y evaluación</span>
+      </button>
+      <button class="unidad-btn" data-seg="la Unidad 5" onclick="pick('seg',this)">
+        <span class="u-num">Unidad 5</span><span class="u-name">Integración y cierre</span>
+      </button>
+      <button class="unidad-btn" data-seg="el tema actual del curso" onclick="pick('seg',this)">
+        <span class="u-num">Actual</span><span class="u-name">Tema actual del curso</span>
+      </button>
+    </div>
+    <div class="transversal-wrap" id="trans-panel" role="tabpanel">
+      <textarea id="trans-input" class="free-input" rows="2"
+        placeholder="Ej: teorema de Pitágoras, Segunda Guerra Mundial, recursividad…"
+        aria-label="Tema transversal"
+        oninput="state.seg = this.value.trim() ? 'el tema de ' + this.value.trim() : null; checkReady()"></textarea>
+      <p class="free-hint"><span class="hint-dot"></span>Escribe cualquier tema de la materia sin importar la unidad.</p>
+    </div>
+  </div>
+
+  <!-- PASO 3 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="step-no">3</span>
+      <span class="card-title">Enfoque de la respuesta</span>
+    </div>
+    <div class="enfoque-grid" role="group" aria-label="Selecciona el enfoque">
+      <button class="enf-btn" data-enf="de forma introductoria y sencilla" onclick="pick('enf',this)">
+        <span class="e-icon">🌱</span><span class="e-label">Básico</span><span class="e-desc">Primera vez con el tema</span>
+      </button>
+      <button class="enf-btn" data-enf="con detalle técnico y ejemplos" onclick="pick('enf',this)">
+        <span class="e-icon">🔧</span><span class="e-label">Técnico</span><span class="e-desc">Con precisión y rigor</span>
+      </button>
+      <button class="enf-btn" data-enf="orientado a resolver un examen o tarea" onclick="pick('enf',this)">
+        <span class="e-icon">📋</span><span class="e-label">Examen</span><span class="e-desc">Preparación para evaluar</span>
+      </button>
+      <button class="enf-btn" data-enf="aplicado a un caso del mundo real" onclick="pick('enf',this)">
+        <span class="e-icon">🌍</span><span class="e-label">Aplicado</span><span class="e-desc">Uso en la práctica</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- PASO 4 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="step-no">4</span>
+      <span class="card-title">¿Algo más específico?</span>
+      <span class="card-desc" style="color:var(--color-text-faint);font-style:italic">Opcional</span>
+    </div>
+    <textarea id="libre-input" class="free-input" rows="2"
+      placeholder="Ej: solo la parte teórica, en menos de 5 pasos, sin fórmulas…"
+      aria-label="Especificación adicional opcional"
+      oninput="checkReady()"></textarea>
+    <p class="free-hint"><span class="hint-dot"></span>Si lo dejas vacío el prompt ya es completo. Úsalo para afinar aún más.</p>
+  </div>
+
+  <button class="btn-gen" id="btn-gen" onclick="generatePrompt()" disabled>
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    Generar Prompt
+  </button>
+
+  <div class="result" id="result" role="region" aria-live="polite">
+    <div class="res-head">
+      <div class="res-label">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Prompt listo
+      </div>
+      <div class="res-actions">
+        <button class="btn-copy" onclick="copyPrompt()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+        <button class="btn-reset" onclick="resetAll()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          Nuevo
+        </button>
+      </div>
+    </div>
+    <div class="res-text" id="res-text"></div>
+    <div class="res-tags" id="res-tags"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Copiado al portapapeles</div>
+
+<script>
+const state = { verb: null, seg: null, enf: null };
+let segMode = 'unidad';
+
+function pick(type, btn) {
+  const parent = btn.closest('[role="group"]') || btn.closest('.unidad-grid') || btn.parentElement;
+  parent.querySelectorAll('.verb-btn, .unidad-btn, .enf-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  const key = type === 'verb' ? 'verb' : type === 'seg' ? 'seg' : 'enf';
+  const dataKey = type === 'verb' ? 'verb' : type === 'seg' ? 'seg' : 'enf';
+  state[key] = btn.dataset[dataKey];
+  checkReady();
+}
+
+function switchSeg(mode, btn) {
+  segMode = mode;
+  document.querySelectorAll('.seg-tab').forEach(t => { t.classList.remove('sel'); t.setAttribute('aria-selected','false'); });
+  btn.classList.add('sel'); btn.setAttribute('aria-selected','true');
+  document.getElementById('unidad-panel').classList.toggle('visible', mode === 'unidad');
+  document.getElementById('trans-panel').classList.toggle('visible', mode === 'transversal');
+  state.seg = null;
+  document.querySelectorAll('.unidad-btn').forEach(b => b.classList.remove('sel'));
+  document.getElementById('trans-input').value = '';
+  checkReady();
+}
+
+function checkReady() {
+  const segOk = segMode === 'unidad' ? !!state.seg : !!(document.getElementById('trans-input').value.trim());
+  document.getElementById('btn-gen').disabled = !(state.verb && segOk && state.enf);
+}
+
+function generatePrompt() {
+  const libre = document.getElementById('libre-input').value.trim();
+  const { verb, enf } = state;
+  let seg = segMode === 'unidad' ? state.seg : ('el tema de ' + document.getElementById('trans-input').value.trim());
+  if (!seg) return;
+
+  const estilos = {
+    'Explícame': 'Explica paso a paso con lenguaje claro e incluye una analogía si ayuda a entender.',
+    'Resume': 'Presenta los puntos clave en viñetas numeradas y cierra con una idea central en 1-2 oraciones.',
+    'Dame un ejemplo práctico de': 'El ejemplo debe ser concreto, real y mostrar cada paso de forma ordenada.',
+    'Analiza y compara': 'Identifica similitudes, diferencias y puntos críticos con una estructura comparativa clara.'
+  };
+
+  let prompt = verb + ' ' + seg + ' ' + enf;
+  if (libre) prompt += ', específicamente: ' + libre;
+  prompt += '.\n\n' + (estilos[verb] || '');
+
+  const card = document.getElementById('result');
+  card.classList.remove('vis');
+  void card.offsetWidth;
+  document.getElementById('res-text').textContent = prompt.trim();
+
+  const tagList = [
+    { label: verb.split(' ')[0], hi: true },
+    { label: seg.replace('el tema de ','').replace('la ','') },
+    { label: enf.split(' ').slice(0,3).join(' ') + '…' },
+  ];
+  if (libre) tagList.push({ label: libre.substring(0,30) + (libre.length > 30 ? '…' : '') });
+  document.getElementById('res-tags').innerHTML = tagList.map(t =>
+    '<span class="tag ' + (t.hi ? 'hi' : '') + '">' + t.label + '</span>'
+  ).join('');
+
+  card.classList.add('vis');
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function copyPrompt() {
+  navigator.clipboard.writeText(document.getElementById('res-text').textContent).then(() => {
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2400);
+  });
+}
+
+function resetAll() {
+  state.verb = null; state.seg = null; state.enf = null;
+  document.querySelectorAll('.verb-btn,.unidad-btn,.enf-btn').forEach(b => b.classList.remove('sel'));
+  document.getElementById('trans-input').value = '';
+  document.getElementById('libre-input').value = '';
+  document.getElementById('result').classList.remove('vis');
+  document.getElementById('btn-gen').disabled = true;
+  switchSeg('unidad', document.getElementById('tab-unidad'));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+(function(){
+  const btn = document.querySelector('[data-theme-toggle]');
+  const root = document.documentElement;
+  let mode = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+  root.setAttribute('data-theme', mode); setIcon(btn, mode);
+  btn.addEventListener('click', () => { mode = mode==='dark'?'light':'dark'; root.setAttribute('data-theme',mode); setIcon(btn,mode); });
+  function setIcon(b,m){b.innerHTML=m==='dark'?'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>':'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';}
+})();
+</script>
+</body>
+</html>
