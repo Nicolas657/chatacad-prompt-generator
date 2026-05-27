@@ -13,7 +13,8 @@
   --color-surface-offset:#f3f0ec;--color-divider:#dcd9d5;--color-border:#d4d1ca;
   --color-text:#28251d;--color-text-muted:#7a7974;--color-text-faint:#bab9b4;
   --color-primary:#01696f;--color-primary-hover:#0c4e54;--color-primary-active:#0f3638;
-  --color-primary-highlight:#cedcd8;
+  --color-primary-highlight:#cedcd8;--color-success:#437a22;--color-success-hi:#d4dfcc;
+  --color-error:#a12c7b;--color-error-hi:#e0ced7;
   --shadow-sm:0 1px 2px oklch(0.2 0.01 80/.06);
   --shadow-md:0 4px 12px oklch(0.2 0.01 80/.08);
   --radius-sm:.375rem;--radius-md:.5rem;--radius-lg:.75rem;--radius-xl:1rem;--radius-full:9999px;
@@ -28,7 +29,8 @@
   --color-surface-offset:#1d1c1a;--color-divider:#262523;--color-border:#393836;
   --color-text:#cdccca;--color-text-muted:#797876;--color-text-faint:#5a5957;
   --color-primary:#4f98a3;--color-primary-hover:#227f8b;--color-primary-active:#1a626b;
-  --color-primary-highlight:#313b3b;
+  --color-primary-highlight:#313b3b;--color-success:#6daa45;--color-success-hi:#3a4435;
+  --color-error:#d163a7;--color-error-hi:#4c3d46;
   --shadow-sm:0 1px 2px oklch(0 0 0/.2);--shadow-md:0 4px 12px oklch(0 0 0/.3);
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme]){
@@ -49,64 +51,92 @@ input,textarea,select{font:inherit;color:inherit}
 .logo-icon{width:34px;height:34px;border-radius:var(--radius-md);background:var(--color-primary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .logo-text{font-family:var(--font-d);font-size:var(--tx-lg);font-style:italic;line-height:1.1}
 .logo-sub{font-size:var(--tx-xs);color:var(--color-text-muted);letter-spacing:.04em;text-transform:uppercase;margin-top:2px}
+.header-right{display:flex;align-items:center;gap:var(--sp2)}
+.materia-badge{padding:var(--sp1) var(--sp3);border-radius:var(--radius-full);background:var(--color-primary-highlight);color:var(--color-primary-active);font-size:var(--tx-xs);font-weight:600;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:none}
+.materia-badge.vis{display:block}
 .theme-btn{width:34px;height:34px;border-radius:var(--radius-md);background:var(--color-surface-offset);border:1px solid var(--color-border);display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);transition:background var(--tr),color var(--tr)}
 .theme-btn:hover{background:var(--color-divider);color:var(--color-text)}
-.card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--sp5) var(--sp6);box-shadow:var(--shadow-sm)}
+.card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--sp5) var(--sp6);box-shadow:var(--shadow-sm);position:relative;transition:border-color var(--tr)}
+.card.step-done{border-color:color-mix(in oklch,var(--color-success) 40%,var(--color-border))}
 .card-head{display:flex;align-items:center;gap:var(--sp2);margin-bottom:var(--sp4)}
-.step-no{width:20px;height:20px;border-radius:var(--radius-full);background:var(--color-primary);color:#fff;font-size:.65rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-no{width:20px;height:20px;border-radius:var(--radius-full);background:var(--color-primary);color:#fff;font-size:.65rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;transition:background var(--tr)}
+.card.step-done .step-no{background:var(--color-success)}
+.step-no-check{display:none}
+.card.step-done .step-no-num{display:none}
+.card.step-done .step-no-check{display:inline}
 .card-title{font-size:var(--tx-sm);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.06em}
 .card-desc{font-size:var(--tx-xs);color:var(--color-text-faint);margin-left:auto}
+.seg-context{display:none;align-items:center;gap:var(--sp2);margin-bottom:var(--sp4);padding:var(--sp2) var(--sp3);background:color-mix(in oklch,var(--color-primary) 6%,var(--color-surface));border-radius:var(--radius-md);border:1px solid color-mix(in oklch,var(--color-primary) 20%,var(--color-border))}
+.seg-context.vis{display:flex}
+.seg-context-label{font-size:var(--tx-xs);color:var(--color-text-muted)}
+.seg-context-name{font-size:var(--tx-xs);font-weight:600;color:var(--color-primary-active);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .verb-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp2)}
 @media(min-width:480px){.verb-grid{grid-template-columns:repeat(4,1fr)}}
-.verb-btn{display:flex;flex-direction:column;align-items:center;gap:var(--sp2);padding:var(--sp4) var(--sp3);border-radius:var(--radius-lg);border:1.5px solid var(--color-border);background:var(--color-surface-2);transition:border-color var(--tr),background var(--tr),box-shadow var(--tr);text-align:center;cursor:pointer}
+.verb-btn{display:flex;flex-direction:column;align-items:center;gap:var(--sp2);padding:var(--sp4) var(--sp3);border-radius:var(--radius-lg);border:1.5px solid var(--color-border);background:var(--color-surface-2);transition:border-color var(--tr),background var(--tr),box-shadow var(--tr);text-align:center}
 .verb-btn:hover{border-color:var(--color-primary);background:color-mix(in oklch,var(--color-primary) 5%,var(--color-surface-2))}
 .verb-btn.sel{border-color:var(--color-primary);background:var(--color-primary-highlight);box-shadow:0 0 0 3px color-mix(in oklch,var(--color-primary) 18%,transparent)}
 .v-icon{font-size:1.35rem;line-height:1}.v-label{font-size:var(--tx-sm);font-weight:600;line-height:1.2}
 .v-desc{font-size:var(--tx-xs);color:var(--color-text-muted);line-height:1.3}
 .seg-tabs{display:flex;gap:var(--sp2);margin-bottom:var(--sp4)}
-.seg-tab{padding:var(--sp2) var(--sp4);border-radius:var(--radius-full);border:1.5px solid var(--color-border);background:var(--color-surface-2);font-size:var(--tx-sm);font-weight:500;cursor:pointer;transition:all var(--tr)}
-.seg-tab:hover{border-color:var(--color-primary)}
+.seg-tab{padding:var(--sp2) var(--sp4);border-radius:var(--radius-full);border:1.5px solid var(--color-border);background:var(--color-surface-2);font-size:var(--tx-sm);font-weight:500;transition:all var(--tr)}
+.seg-tab:hover:not(:disabled){border-color:var(--color-primary)}
 .seg-tab.sel{border-color:var(--color-primary);background:var(--color-primary-highlight);color:var(--color-primary-active);font-weight:600}
+.seg-tab:disabled{opacity:.4;cursor:not-allowed}
 .unidad-grid{display:none;grid-template-columns:repeat(2,1fr);gap:var(--sp2)}
 .unidad-grid.visible{display:grid}
 @media(min-width:440px){.unidad-grid{grid-template-columns:repeat(3,1fr)}}
-.unidad-btn{display:flex;flex-direction:column;padding:var(--sp3) var(--sp4);border-radius:var(--radius-md);border:1.5px solid var(--color-border);background:var(--color-surface-2);cursor:pointer;transition:all var(--tr);gap:2px}
+.unidad-btn{display:flex;flex-direction:column;padding:var(--sp3) var(--sp4);border-radius:var(--radius-md);border:1.5px solid var(--color-border);background:var(--color-surface-2);transition:all var(--tr);gap:2px;min-height:60px}
 .unidad-btn:hover{border-color:var(--color-primary)}
 .unidad-btn.sel{border-color:var(--color-primary);background:var(--color-primary-highlight)}
 .u-num{font-size:var(--tx-xs);font-weight:700;color:var(--color-primary);text-transform:uppercase;letter-spacing:.04em}
-.u-name{font-size:var(--tx-sm);font-weight:500;color:var(--color-text);line-height:1.3}
+.u-name{font-size:var(--tx-sm);font-weight:500;color:var(--color-text);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.skeleton-wrap{display:none;grid-template-columns:repeat(2,1fr);gap:var(--sp2)}
+.skeleton-wrap.visible{display:grid}
+@media(min-width:440px){.skeleton-wrap{grid-template-columns:repeat(3,1fr)}}
+.skeleton{background:linear-gradient(90deg,var(--color-surface-offset) 25%,var(--color-surface-2) 50%,var(--color-surface-offset) 75%);background-size:200% 100%;animation:shimmer 1.5s ease-in-out infinite;border-radius:var(--radius-md);min-height:60px}
+.empty-units{display:none;flex-direction:column;align-items:center;gap:var(--sp3);padding:var(--sp8) var(--sp4);text-align:center;color:var(--color-text-muted)}
+.empty-units.visible{display:flex}
+.empty-units-icon{font-size:1.8rem;opacity:.5}
+.empty-units p{font-size:var(--tx-sm);max-width:32ch}
 .transversal-wrap{display:none}
 .transversal-wrap.visible{display:block}
-.enfoque-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp2)}
-@media(min-width:440px){.enfoque-grid{grid-template-columns:repeat(4,1fr)}}
-.enf-btn{display:flex;flex-direction:column;align-items:center;gap:var(--sp2);padding:var(--sp3) var(--sp2);border-radius:var(--radius-lg);border:1.5px solid var(--color-border);background:var(--color-surface-2);cursor:pointer;transition:all var(--tr);text-align:center}
-.enf-btn:hover{border-color:var(--color-primary);background:color-mix(in oklch,var(--color-primary) 4%,var(--color-surface-2))}
-.enf-btn.sel{border-color:var(--color-primary);background:var(--color-primary-highlight);box-shadow:0 0 0 3px color-mix(in oklch,var(--color-primary) 18%,transparent)}
-.e-icon{font-size:1.2rem}.e-label{font-size:var(--tx-xs);font-weight:600;line-height:1.2;color:var(--color-text)}
-.e-desc{font-size:var(--tx-xs);color:var(--color-text-muted);line-height:1.2}
 .free-input{width:100%;padding:var(--sp3) var(--sp4);border-radius:var(--radius-lg);border:1.5px solid var(--color-border);background:var(--color-surface-2);font-size:var(--tx-base);line-height:1.5;resize:none;transition:border-color var(--tr)}
 .free-input::placeholder{color:var(--color-text-faint)}
 .free-input:focus{border-color:var(--color-primary);outline:none}
 .free-hint{font-size:var(--tx-xs);color:var(--color-text-muted);margin-top:var(--sp2);display:flex;align-items:flex-start;gap:var(--sp2)}
 .hint-dot{width:6px;height:6px;border-radius:var(--radius-full);background:var(--color-text-faint);margin-top:5px;flex-shrink:0}
+.enfoque-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp2)}
+@media(min-width:440px){.enfoque-grid{grid-template-columns:repeat(4,1fr)}}
+.enf-btn{display:flex;flex-direction:column;align-items:center;gap:var(--sp2);padding:var(--sp3) var(--sp2);border-radius:var(--radius-lg);border:1.5px solid var(--color-border);background:var(--color-surface-2);transition:all var(--tr);text-align:center}
+.enf-btn:hover{border-color:var(--color-primary);background:color-mix(in oklch,var(--color-primary) 4%,var(--color-surface-2))}
+.enf-btn.sel{border-color:var(--color-primary);background:var(--color-primary-highlight);box-shadow:0 0 0 3px color-mix(in oklch,var(--color-primary) 18%,transparent)}
+.e-icon{font-size:1.2rem}.e-label{font-size:var(--tx-xs);font-weight:600;line-height:1.2}
+.e-desc{font-size:var(--tx-xs);color:var(--color-text-muted);line-height:1.2}
+.progress-bar{height:3px;background:var(--color-divider);border-radius:var(--radius-full);overflow:hidden;margin-bottom:var(--sp2)}
+.progress-fill{height:100%;background:var(--color-primary);border-radius:var(--radius-full);transition:width .4s cubic-bezier(.16,1,.3,1);width:0%}
 .btn-gen{width:100%;padding:var(--sp4) var(--sp6);border-radius:var(--radius-lg);background:var(--color-primary);color:#fff;font-size:var(--tx-base);font-weight:600;letter-spacing:.01em;border:none;cursor:pointer;transition:background var(--tr),transform var(--tr),box-shadow var(--tr);display:flex;align-items:center;justify-content:center;gap:var(--sp3);box-shadow:var(--shadow-sm)}
-.btn-gen:hover{background:var(--color-primary-hover);box-shadow:var(--shadow-md);transform:translateY(-1px)}
-.btn-gen:active{transform:translateY(0)}
+.btn-gen:hover:not(:disabled){background:var(--color-primary-hover);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.btn-gen:active:not(:disabled){transform:translateY(0)}
 .btn-gen:disabled{opacity:.42;cursor:not-allowed;transform:none;box-shadow:none}
 .result{background:var(--color-surface);border:1.5px solid var(--color-primary);border-radius:var(--radius-xl);padding:var(--sp6);box-shadow:var(--shadow-md);display:none;animation:fup .35s cubic-bezier(.16,1,.3,1) forwards}
 .result.vis{display:block}
 @keyframes fup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .res-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp4)}
 .res-label{font-size:var(--tx-xs);font-weight:600;color:var(--color-primary);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:var(--sp2)}
-.res-actions{display:flex;gap:var(--sp2)}
-.btn-copy,.btn-reset{padding:var(--sp2) var(--sp3);border-radius:var(--radius-md);font-size:var(--tx-xs);font-weight:600;border:1px solid var(--color-border);background:var(--color-surface-offset);cursor:pointer;transition:all var(--tr);display:flex;align-items:center;gap:var(--sp1)}
-.btn-copy:hover,.btn-reset:hover{border-color:var(--color-primary);background:var(--color-primary-highlight)}
+.res-actions{display:flex;gap:var(--sp2);align-items:center}
+.btn-copy{position:relative;padding:var(--sp2) var(--sp3);border-radius:var(--radius-md);font-size:var(--tx-xs);font-weight:600;border:1px solid var(--color-border);background:var(--color-surface-offset);cursor:pointer;transition:all var(--tr);display:flex;align-items:center;gap:var(--sp1)}
+.btn-copy:hover{border-color:var(--color-primary);background:var(--color-primary-highlight)}
+.btn-reset{padding:var(--sp2) var(--sp3);border-radius:var(--radius-md);font-size:var(--tx-xs);font-weight:600;border:1px solid var(--color-border);background:var(--color-surface-offset);cursor:pointer;transition:all var(--tr);display:flex;align-items:center;gap:var(--sp1)}
+.btn-reset:hover{border-color:var(--color-primary);background:var(--color-primary-highlight)}
+.copy-feedback{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--color-text);color:var(--color-bg);padding:var(--sp1) var(--sp3);border-radius:var(--radius-full);font-size:var(--tx-xs);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;z-index:10}
+.copy-feedback.show{opacity:1}
 .res-text{font-size:var(--tx-base);line-height:1.75;color:var(--color-text);white-space:pre-wrap;word-break:break-word}
 .res-tags{display:flex;flex-wrap:wrap;gap:var(--sp2);margin-top:var(--sp4);padding-top:var(--sp4);border-top:1px solid var(--color-divider)}
 .tag{padding:var(--sp1) var(--sp3);border-radius:var(--radius-full);background:var(--color-surface-offset);font-size:var(--tx-xs);color:var(--color-text-muted);font-weight:500}
 .tag.hi{background:var(--color-primary-highlight);color:var(--color-primary-active)}
-.toast{position:fixed;bottom:var(--sp6);left:50%;transform:translateX(-50%) translateY(16px);background:var(--color-text);color:var(--color-bg);padding:var(--sp3) var(--sp5);border-radius:var(--radius-full);font-size:var(--tx-sm);font-weight:500;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:99}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.no-context-banner{display:none;align-items:center;gap:var(--sp3);padding:var(--sp3) var(--sp4);background:color-mix(in oklch,var(--color-text-faint) 10%,var(--color-surface));border:1px solid var(--color-divider);border-radius:var(--radius-lg);font-size:var(--tx-xs);color:var(--color-text-muted)}
+.no-context-banner.vis{display:flex}
 </style>
 </head>
 <body>
@@ -123,99 +153,104 @@ input,textarea,select{font:inherit;color:inherit}
         <div class="logo-sub">Generador de prompts</div>
       </div>
     </div>
-    <button class="theme-btn" data-theme-toggle aria-label="Cambiar tema">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
+    <div class="header-right">
+      <span class="materia-badge" id="materia-badge" title=""></span>
+      <button class="theme-btn" data-theme-toggle aria-label="Cambiar tema">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
   </header>
 
+  <div class="no-context-banner" id="no-context-banner" role="status">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+    Modo independiente — no se detectó contexto de materia. Usa el campo libre para especificar.
+  </div>
+
+  <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+
   <!-- PASO 1 -->
-  <div class="card">
+  <div class="card" id="card-1">
     <div class="card-head">
-      <span class="step-no">1</span>
+      <span class="step-no" aria-hidden="true"><span class="step-no-num">1</span><span class="step-no-check">✓</span></span>
       <span class="card-title">¿Qué quieres hacer?</span>
     </div>
     <div class="verb-grid" role="group" aria-label="Selecciona una acción">
-      <button class="verb-btn" data-verb="Explícame" onclick="pick('verb',this)">
+      <button class="verb-btn" data-verb="Explícame" onclick="pick('verb',this,'card-1')">
         <span class="v-icon">🔍</span><span class="v-label">Explicar</span><span class="v-desc">Entender a fondo</span>
       </button>
-      <button class="verb-btn" data-verb="Resume" onclick="pick('verb',this)">
+      <button class="verb-btn" data-verb="Resume" onclick="pick('verb',this,'card-1')">
         <span class="v-icon">📝</span><span class="v-label">Resumir</span><span class="v-desc">Sintetizar ideas</span>
       </button>
-      <button class="verb-btn" data-verb="Dame un ejemplo práctico de" onclick="pick('verb',this)">
+      <button class="verb-btn" data-verb="Dame un ejemplo práctico de" onclick="pick('verb',this,'card-1')">
         <span class="v-icon">⚗️</span><span class="v-label">Ejemplificar</span><span class="v-desc">Ver en acción</span>
       </button>
-      <button class="verb-btn" data-verb="Analiza y compara" onclick="pick('verb',this)">
+      <button class="verb-btn" data-verb="Analiza y compara" onclick="pick('verb',this,'card-1')">
         <span class="v-icon">⚖️</span><span class="v-label">Analizar</span><span class="v-desc">Evaluar y comparar</span>
       </button>
     </div>
   </div>
 
   <!-- PASO 2 -->
-  <div class="card">
+  <div class="card" id="card-2">
     <div class="card-head">
-      <span class="step-no">2</span>
+      <span class="step-no" aria-hidden="true"><span class="step-no-num">2</span><span class="step-no-check">✓</span></span>
       <span class="card-title">Segmento de la materia</span>
-      <span class="card-desc">Unidad o tema transversal</span>
+      <span class="card-desc">Unidad o tema libre</span>
+    </div>
+    <div class="seg-context" id="seg-context">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>
+      <span class="seg-context-label">Materia:</span>
+      <span class="seg-context-name" id="seg-context-name">—</span>
     </div>
     <div class="seg-tabs" role="tablist">
-      <button class="seg-tab sel" role="tab" aria-selected="true" onclick="switchSeg('unidad',this)" id="tab-unidad">📖 Por unidad / capítulo</button>
-      <button class="seg-tab" role="tab" aria-selected="false" onclick="switchSeg('transversal',this)" id="tab-trans">🔗 Tema transversal</button>
+      <button class="seg-tab sel" role="tab" aria-selected="true" onclick="switchSeg('unidad',this)" id="tab-unidad">📖 Por unidad</button>
+      <button class="seg-tab" role="tab" aria-selected="false" onclick="switchSeg('transversal',this)" id="tab-trans">🔗 Tema libre</button>
     </div>
-    <div class="unidad-grid visible" id="unidad-panel" role="tabpanel">
-      <button class="unidad-btn" data-seg="la Unidad 1" onclick="pick('seg',this)">
-        <span class="u-num">Unidad 1</span><span class="u-name">Introducción / Fundamentos</span>
-      </button>
-      <button class="unidad-btn" data-seg="la Unidad 2" onclick="pick('seg',this)">
-        <span class="u-num">Unidad 2</span><span class="u-name">Desarrollo conceptual</span>
-      </button>
-      <button class="unidad-btn" data-seg="la Unidad 3" onclick="pick('seg',this)">
-        <span class="u-num">Unidad 3</span><span class="u-name">Aplicación práctica</span>
-      </button>
-      <button class="unidad-btn" data-seg="la Unidad 4" onclick="pick('seg',this)">
-        <span class="u-num">Unidad 4</span><span class="u-name">Análisis y evaluación</span>
-      </button>
-      <button class="unidad-btn" data-seg="la Unidad 5" onclick="pick('seg',this)">
-        <span class="u-num">Unidad 5</span><span class="u-name">Integración y cierre</span>
-      </button>
-      <button class="unidad-btn" data-seg="el tema actual del curso" onclick="pick('seg',this)">
-        <span class="u-num">Actual</span><span class="u-name">Tema actual del curso</span>
-      </button>
+    <div class="skeleton-wrap" id="skel-wrap">
+      <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
     </div>
-    <div class="transversal-wrap" id="trans-panel" role="tabpanel">
+    <div class="unidad-grid" id="unidad-panel" role="tabpanel" aria-labelledby="tab-unidad"></div>
+    <div class="empty-units" id="empty-units" role="status">
+      <span class="empty-units-icon">📭</span>
+      <p>Esta materia no tiene unidades definidas. Usa <strong>Tema libre</strong> para continuar.</p>
+    </div>
+    <div class="transversal-wrap" id="trans-panel" role="tabpanel" aria-labelledby="tab-trans">
       <textarea id="trans-input" class="free-input" rows="2"
-        placeholder="Ej: teorema de Pitágoras, Segunda Guerra Mundial, recursividad…"
-        aria-label="Tema transversal"
-        oninput="state.seg = this.value.trim() ? 'el tema de ' + this.value.trim() : null; checkReady()"></textarea>
-      <p class="free-hint"><span class="hint-dot"></span>Escribe cualquier tema de la materia sin importar la unidad.</p>
+        placeholder="Ej: teorema de Pitágoras, recursividad, Segunda Guerra Mundial…"
+        aria-label="Tema libre"
+        oninput="checkReady()"></textarea>
+      <p class="free-hint"><span class="hint-dot"></span>Escribe cualquier concepto sin importar la unidad.</p>
     </div>
   </div>
 
   <!-- PASO 3 -->
-  <div class="card">
+  <div class="card" id="card-3">
     <div class="card-head">
-      <span class="step-no">3</span>
+      <span class="step-no" aria-hidden="true"><span class="step-no-num">3</span><span class="step-no-check">✓</span></span>
       <span class="card-title">Enfoque de la respuesta</span>
     </div>
     <div class="enfoque-grid" role="group" aria-label="Selecciona el enfoque">
-      <button class="enf-btn" data-enf="de forma introductoria y sencilla" onclick="pick('enf',this)">
+      <button class="enf-btn" data-enf="de forma introductoria y sencilla" onclick="pick('enf',this,'card-3')">
         <span class="e-icon">🌱</span><span class="e-label">Básico</span><span class="e-desc">Primera vez con el tema</span>
       </button>
-      <button class="enf-btn" data-enf="con detalle técnico y ejemplos" onclick="pick('enf',this)">
+      <button class="enf-btn" data-enf="con detalle técnico y ejemplos" onclick="pick('enf',this,'card-3')">
         <span class="e-icon">🔧</span><span class="e-label">Técnico</span><span class="e-desc">Con precisión y rigor</span>
       </button>
-      <button class="enf-btn" data-enf="orientado a resolver un examen o tarea" onclick="pick('enf',this)">
-        <span class="e-icon">📋</span><span class="e-label">Examen</span><span class="e-desc">Preparación para evaluar</span>
+      <button class="enf-btn" data-enf="orientado a resolver un examen o tarea" onclick="pick('enf',this,'card-3')">
+        <span class="e-icon">📋</span><span class="e-label">Examen</span><span class="e-desc">Preparación evaluativa</span>
       </button>
-      <button class="enf-btn" data-enf="aplicado a un caso del mundo real" onclick="pick('enf',this)">
-        <span class="e-icon">🌍</span><span class="e-label">Aplicado</span><span class="e-desc">Uso en la práctica</span>
+      <button class="enf-btn" data-enf="aplicado a un caso del mundo real" onclick="pick('enf',this,'card-3')">
+        <span class="e-icon">🌍</span><span class="e-label">Aplicado</span><span class="e-desc">Uso práctico</span>
       </button>
     </div>
   </div>
 
   <!-- PASO 4 -->
-  <div class="card">
+  <div class="card" id="card-4">
     <div class="card-head">
-      <span class="step-no">4</span>
+      <span class="step-no" aria-hidden="true"><span class="step-no-num">4</span></span>
       <span class="card-title">¿Algo más específico?</span>
       <span class="card-desc" style="color:var(--color-text-faint);font-style:italic">Opcional</span>
     </div>
@@ -223,7 +258,7 @@ input,textarea,select{font:inherit;color:inherit}
       placeholder="Ej: solo la parte teórica, en menos de 5 pasos, sin fórmulas…"
       aria-label="Especificación adicional opcional"
       oninput="checkReady()"></textarea>
-    <p class="free-hint"><span class="hint-dot"></span>Si lo dejas vacío el prompt ya es completo. Úsalo para afinar aún más.</p>
+    <p class="free-hint"><span class="hint-dot"></span>Si lo dejas vacío el prompt ya es completo.</p>
   </div>
 
   <button class="btn-gen" id="btn-gen" onclick="generatePrompt()" disabled>
@@ -238,9 +273,10 @@ input,textarea,select{font:inherit;color:inherit}
         Prompt listo
       </div>
       <div class="res-actions">
-        <button class="btn-copy" onclick="copyPrompt()">
+        <button class="btn-copy" onclick="copyPrompt()" aria-label="Copiar prompt">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
+          <span class="copy-feedback" id="copy-feedback">✓ Copiado</span>
         </button>
         <button class="btn-reset" onclick="resetAll()">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -253,20 +289,75 @@ input,textarea,select{font:inherit;color:inherit}
   </div>
 </div>
 
-<div class="toast" id="toast">✓ Copiado al portapapeles</div>
-
 <script>
-const state = { verb: null, seg: null, enf: null };
+const state = { verb: null, enf: null, segVal: null };
 let segMode = 'unidad';
+let materiaCtx = null;
 
-function pick(type, btn) {
-  const parent = btn.closest('[role="group"]') || btn.closest('.unidad-grid') || btn.parentElement;
-  parent.querySelectorAll('.verb-btn, .unidad-btn, .enf-btn').forEach(b => b.classList.remove('sel'));
+const ESTILOS = {
+  'Explícame': 'Explica paso a paso con lenguaje claro e incluye una analogía si ayuda a entender.',
+  'Resume': 'Presenta los puntos clave en viñetas numeradas y cierra con una idea central en 1-2 oraciones.',
+  'Dame un ejemplo práctico de': 'El ejemplo debe ser concreto, real y mostrar cada paso de forma ordenada.',
+  'Analiza y compara': 'Identifica similitudes, diferencias y puntos críticos con una estructura comparativa clara.'
+};
+
+function normalizeUnidades(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter(u => u && (u.nombre || u.name || u.titulo || u.title))
+    .slice(0, 8)
+    .map((u, i) => ({
+      num: u.numero || u.number || u.num || (i + 1),
+      nombre: (u.nombre || u.name || u.titulo || u.title || '').trim()
+    }))
+    .filter(u => u.nombre.length > 0);
+}
+
+function renderUnidades(unidades) {
+  const grid = document.getElementById('unidad-panel');
+  const skel = document.getElementById('skel-wrap');
+  const empty = document.getElementById('empty-units');
+  const tabUnidad = document.getElementById('tab-unidad');
+  skel.classList.remove('visible');
+  if (!unidades || unidades.length === 0) {
+    grid.classList.remove('visible');
+    empty.classList.add('visible');
+    tabUnidad.disabled = true;
+    switchSeg('transversal', document.getElementById('tab-trans'));
+    return;
+  }
+  empty.classList.remove('visible');
+  tabUnidad.disabled = false;
+  const items = [...unidades, { num: '★', nombre: 'Tema actual del curso' }];
+  grid.innerHTML = items.map(u => {
+    const segVal = u.num === '★' ? 'el tema actual del curso' : `la Unidad ${u.num} (${u.nombre})`;
+    return `<button class="unidad-btn" data-seg="${segVal}" onclick="pickSeg(this)">
+      <span class="u-num">${u.num === '★' ? 'Actual' : 'Unidad ' + u.num}</span>
+      <span class="u-name">${u.nombre}</span>
+    </button>`;
+  }).join('');
+  grid.classList.add('visible');
+}
+
+function pickSeg(btn) {
+  document.querySelectorAll('#unidad-panel .unidad-btn').forEach(b => b.classList.remove('sel'));
   btn.classList.add('sel');
-  const key = type === 'verb' ? 'verb' : type === 'seg' ? 'seg' : 'enf';
-  const dataKey = type === 'verb' ? 'verb' : type === 'seg' ? 'seg' : 'enf';
-  state[key] = btn.dataset[dataKey];
+  state.segVal = btn.dataset.seg;
+  markCardDone('card-2', true);
   checkReady();
+}
+
+function pick(type, btn, cardId) {
+  const group = btn.closest('[role="group"]');
+  group.querySelectorAll('.verb-btn, .enf-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  state[type] = btn.dataset[type];
+  markCardDone(cardId, true);
+  checkReady();
+}
+
+function markCardDone(cardId, done) {
+  document.getElementById(cardId).classList.toggle('step-done', done);
 }
 
 function switchSeg(mode, btn) {
@@ -275,70 +366,138 @@ function switchSeg(mode, btn) {
   btn.classList.add('sel'); btn.setAttribute('aria-selected','true');
   document.getElementById('unidad-panel').classList.toggle('visible', mode === 'unidad');
   document.getElementById('trans-panel').classList.toggle('visible', mode === 'transversal');
-  state.seg = null;
-  document.querySelectorAll('.unidad-btn').forEach(b => b.classList.remove('sel'));
-  document.getElementById('trans-input').value = '';
+  state.segVal = null;
+  document.querySelectorAll('#unidad-panel .unidad-btn').forEach(b => b.classList.remove('sel'));
+  if (mode === 'unidad') document.getElementById('trans-input').value = '';
+  markCardDone('card-2', false);
   checkReady();
 }
 
+function getSegValue() {
+  if (segMode === 'unidad') return state.segVal || null;
+  const v = document.getElementById('trans-input').value.trim();
+  return v ? `el tema de "${v}"` : null;
+}
+
 function checkReady() {
-  const segOk = segMode === 'unidad' ? !!state.seg : !!(document.getElementById('trans-input').value.trim());
-  document.getElementById('btn-gen').disabled = !(state.verb && segOk && state.enf);
+  const seg = getSegValue();
+  const ready = !!(state.verb && seg && state.enf);
+  document.getElementById('btn-gen').disabled = !ready;
+  const done = [state.verb, seg, state.enf].filter(Boolean).length;
+  const pct = Math.round((done / 3) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.querySelector('.progress-bar').setAttribute('aria-valuenow', pct);
+  if (seg) markCardDone('card-2', true);
 }
 
 function generatePrompt() {
+  const seg = getSegValue();
+  if (!seg || !state.verb || !state.enf) return;
   const libre = document.getElementById('libre-input').value.trim();
-  const { verb, enf } = state;
-  let seg = segMode === 'unidad' ? state.seg : ('el tema de ' + document.getElementById('trans-input').value.trim());
-  if (!seg) return;
-
-  const estilos = {
-    'Explícame': 'Explica paso a paso con lenguaje claro e incluye una analogía si ayuda a entender.',
-    'Resume': 'Presenta los puntos clave en viñetas numeradas y cierra con una idea central en 1-2 oraciones.',
-    'Dame un ejemplo práctico de': 'El ejemplo debe ser concreto, real y mostrar cada paso de forma ordenada.',
-    'Analiza y compara': 'Identifica similitudes, diferencias y puntos críticos con una estructura comparativa clara.'
-  };
-
-  let prompt = verb + ' ' + seg + ' ' + enf;
-  if (libre) prompt += ', específicamente: ' + libre;
-  prompt += '.\n\n' + (estilos[verb] || '');
-
+  let prompt = `${state.verb} ${seg} ${state.enf}`;
+  if (libre) prompt += `, específicamente: ${libre}`;
+  prompt += `.\n\n${ESTILOS[state.verb] || ''}`;
   const card = document.getElementById('result');
   card.classList.remove('vis');
   void card.offsetWidth;
   document.getElementById('res-text').textContent = prompt.trim();
-
+  const verbLabel = document.querySelector('.verb-btn.sel .v-label')?.textContent || state.verb.split(' ')[0];
+  const segDisplay = seg.replace(/^el tema de "|"$/g,'').replace('la ','');
+  const enfLabel = document.querySelector('.enf-btn.sel .e-label')?.textContent || '';
   const tagList = [
-    { label: verb.split(' ')[0], hi: true },
-    { label: seg.replace('el tema de ','').replace('la ','') },
-    { label: enf.split(' ').slice(0,3).join(' ') + '…' },
+    { label: verbLabel, hi: true },
+    { label: segDisplay.substring(0,28) + (segDisplay.length>28?'…':'') },
+    { label: enfLabel },
   ];
-  if (libre) tagList.push({ label: libre.substring(0,30) + (libre.length > 30 ? '…' : '') });
+  if (libre) tagList.push({ label: libre.substring(0,28) + (libre.length>28?'…':'') });
   document.getElementById('res-tags').innerHTML = tagList.map(t =>
-    '<span class="tag ' + (t.hi ? 'hi' : '') + '">' + t.label + '</span>'
+    `<span class="tag ${t.hi?'hi':''}">${t.label}</span>`
   ).join('');
-
   card.classList.add('vis');
-  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  card.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  try { window.parent.postMessage({ type:'CHATACAD_PROMPT_GENERATED', prompt: prompt.trim() }, '*'); } catch(e){}
 }
 
 function copyPrompt() {
-  navigator.clipboard.writeText(document.getElementById('res-text').textContent).then(() => {
-    const t = document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2400);
-  });
+  const text = document.getElementById('res-text').textContent;
+  const showFeedback = () => {
+    const fb = document.getElementById('copy-feedback');
+    fb.classList.add('show');
+    setTimeout(() => fb.classList.remove('show'), 1800);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(showFeedback).catch(() => fallbackCopy(text, showFeedback));
+  } else { fallbackCopy(text, showFeedback); }
+}
+function fallbackCopy(text, cb) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.cssText = 'position:fixed;top:-999px;opacity:0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
 }
 
 function resetAll() {
-  state.verb = null; state.seg = null; state.enf = null;
-  document.querySelectorAll('.verb-btn,.unidad-btn,.enf-btn').forEach(b => b.classList.remove('sel'));
+  state.verb = null; state.enf = null; state.segVal = null;
+  document.querySelectorAll('.verb-btn,.enf-btn').forEach(b => b.classList.remove('sel'));
+  document.querySelectorAll('#unidad-panel .unidad-btn').forEach(b => b.classList.remove('sel'));
   document.getElementById('trans-input').value = '';
   document.getElementById('libre-input').value = '';
   document.getElementById('result').classList.remove('vis');
   document.getElementById('btn-gen').disabled = true;
-  switchSeg('unidad', document.getElementById('tab-unidad'));
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('progress-fill').style.width = '0%';
+  ['card-1','card-2','card-3'].forEach(id => markCardDone(id, false));
+  if (!document.getElementById('tab-unidad').disabled) {
+    switchSeg('unidad', document.getElementById('tab-unidad'));
+  }
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+}
+
+let contextTimeout = null;
+window.addEventListener('message', function(e) {
+  const d = e.data;
+  if (!d || typeof d !== 'object') return;
+  if (d.type === 'CHATACAD_CONTEXT') {
+    clearTimeout(contextTimeout);
+    const materia = d.materia || {};
+    const nombre = materia.nombre || materia.name || '';
+    const rawUnidades = materia.unidades || materia.units || [];
+    materiaCtx = { nombre, unidades: normalizeUnidades(rawUnidades) };
+    if (nombre) {
+      const badge = document.getElementById('materia-badge');
+      badge.textContent = nombre; badge.title = nombre; badge.classList.add('vis');
+      document.getElementById('seg-context-name').textContent = nombre;
+      document.getElementById('seg-context').classList.add('vis');
+    }
+    renderUnidades(materiaCtx.unidades);
+  }
+});
+
+contextTimeout = setTimeout(() => {
+  if (!materiaCtx) {
+    document.getElementById('no-context-banner').classList.add('vis');
+    renderUnidades([]);
+  }
+}, 1200);
+
+if (location.search.includes('demo')) {
+  setTimeout(() => {
+    window.dispatchEvent(new MessageEvent('message', {
+      data: {
+        type: 'CHATACAD_CONTEXT',
+        materia: {
+          nombre: 'Cálculo Diferencial',
+          unidades: [
+            { num:1, nombre:'Límites y continuidad' },
+            { num:2, nombre:'Derivadas: definición y reglas' },
+            { num:3, nombre:'Derivadas de funciones compuestas' },
+            { num:4, nombre:'Aplicaciones de la derivada' },
+          ]
+        }
+      }
+    }));
+  }, 400);
 }
 
 (function(){
@@ -349,6 +508,8 @@ function resetAll() {
   btn.addEventListener('click', () => { mode = mode==='dark'?'light':'dark'; root.setAttribute('data-theme',mode); setIcon(btn,mode); });
   function setIcon(b,m){b.innerHTML=m==='dark'?'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>':'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';}
 })();
+
+document.getElementById('skel-wrap').classList.add('visible');
 </script>
 </body>
 </html>
